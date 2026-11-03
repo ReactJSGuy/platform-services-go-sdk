@@ -39,6 +39,7 @@ import (
 // CONTEXT_BASED_RESTRICTIONS_TEST_ACCOUNT_ID=<the id of the account under which test CBR zones and rules are created>
 // CONTEXT_BASED_RESTRICTIONS_TEST_SERVICE_NAME=<the name of the service to be associated with the test CBR rules>
 // CONTEXT_BASED_RESTRICTIONS_TEST_VPC_CRN=<the CRN of the vpc instance to be associated with the test CBR rules>
+// CONTEXT_BASED_RESTRICTIONS_TEST_TARGET_ACCOUNT_ID=<the ID of the account within the enterprise to which test zones are assigned>
 //
 // These configuration properties can be exported as environment variables, or stored
 // in a configuration file and then:
@@ -54,10 +55,13 @@ var _ = Describe(`ContextBasedRestrictionsV1 Examples Tests`, func() {
 		accountID                       string
 		serviceName                     string
 		vpcCRN                          string
+		targetAccountID                 string
 		zoneID                          string
 		zoneRev                         string
 		ruleID                          string
 		ruleRev                         string
+		zoneAssignmentID                string
+		zoneAssignmentRev               string
 	)
 
 	var shouldSkipTest = func() {
@@ -94,6 +98,11 @@ var _ = Describe(`ContextBasedRestrictionsV1 Examples Tests`, func() {
 			vpcCRN = config["TEST_VPC_CRN"]
 			if vpcCRN == "" {
 				Skip("Unable to load TEST_VPC_CRN configuration property, skipping tests")
+			}
+
+			targetAccountID = config["TEST_TARGET_ACCOUNT_ID"]
+			if targetAccountID == "" {
+				Skip("Unable to load TEST_TARGET_ACCOUNT_ID configuration property, skipping tests")
 			}
 
 			if len(config) == 0 {
@@ -512,6 +521,124 @@ var _ = Describe(`ContextBasedRestrictionsV1 Examples Tests`, func() {
 			Expect(operationsList).ToNot(BeNil())
 		})
 
+		It(`CreateZoneAssignment request example`, func() {
+			fmt.Println("\nCreateZoneAssignment() result:")
+			// begin-create_zone_assignment
+
+			enterpriseTargetModel := &contextbasedrestrictionsv1.EnterpriseTarget{
+				Type: core.StringPtr(contextbasedrestrictionsv1.EnterpriseTargetTypeAccountConst),
+				ID:   core.StringPtr(targetAccountID),
+			}
+
+			zoneSpecModel := &contextbasedrestrictionsv1.ZoneAssignmentZoneSpec{
+				ID: core.StringPtr(zoneID),
+			}
+
+			createZoneAssignmentOptions := contextBasedRestrictionsService.NewCreateZoneAssignmentOptions()
+			createZoneAssignmentOptions.SetAccountID(accountID)
+			createZoneAssignmentOptions.SetTarget(enterpriseTargetModel)
+			createZoneAssignmentOptions.SetZones([]contextbasedrestrictionsv1.ZoneAssignmentZoneSpec{*zoneSpecModel})
+
+			zoneAssignmentBulkOutput, response, err := contextBasedRestrictionsService.CreateZoneAssignment(createZoneAssignmentOptions)
+			if err != nil {
+				panic(err)
+			}
+			b, _ := json.MarshalIndent(zoneAssignmentBulkOutput, "", "  ")
+			fmt.Println(string(b))
+
+			// end-create_zone_assignment
+
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(201))
+			Expect(zoneAssignmentBulkOutput).ToNot(BeNil())
+			zoneAssignmentID = *zoneAssignmentBulkOutput.Assignments[0].ID
+		})
+		It(`ListZoneAssignments request example`, func() {
+			fmt.Println("\nListZoneAssignments() result:")
+			// begin-list_zone_assignments
+
+			listZoneAssignmentsOptions := contextBasedRestrictionsService.NewListZoneAssignmentsOptions(
+				accountID,
+			)
+
+			zoneAssignmentList, response, err := contextBasedRestrictionsService.ListZoneAssignments(listZoneAssignmentsOptions)
+			if err != nil {
+				panic(err)
+			}
+			b, _ := json.MarshalIndent(zoneAssignmentList, "", "  ")
+			fmt.Println(string(b))
+
+			// end-list_zone_assignments
+
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(200))
+			Expect(zoneAssignmentList).ToNot(BeNil())
+		})
+		It(`GetZoneAssignment request example`, func() {
+			fmt.Println("\nGetZoneAssignment() result:")
+			// begin-get_zone_assignment
+
+			getZoneAssignmentOptions := contextBasedRestrictionsService.NewGetZoneAssignmentOptions(
+				zoneAssignmentID,
+			)
+
+			zoneAssignment, response, err := contextBasedRestrictionsService.GetZoneAssignment(getZoneAssignmentOptions)
+			if err != nil {
+				panic(err)
+			}
+			b, _ := json.MarshalIndent(zoneAssignment, "", "  ")
+			fmt.Println(string(b))
+
+			// end-get_zone_assignment
+
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(200))
+			Expect(zoneAssignment).ToNot(BeNil())
+			zoneAssignmentRev = response.Headers.Get("Etag")
+		})
+		It(`PatchZoneAssignment request example`, func() {
+			fmt.Println("\nPatchZoneAssignment() result:")
+			// begin-patch_zone_assignment
+
+			patchZoneAssignmentOptions := contextBasedRestrictionsService.NewPatchZoneAssignmentOptions(
+				zoneAssignmentID,
+				zoneAssignmentRev,
+			)
+
+			zoneAssignment, response, err := contextBasedRestrictionsService.PatchZoneAssignment(patchZoneAssignmentOptions)
+			if err != nil {
+				panic(err)
+			}
+			b, _ := json.MarshalIndent(zoneAssignment, "", "  ")
+			fmt.Println(string(b))
+
+			// end-patch_zone_assignment
+
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(200))
+			Expect(zoneAssignment).ToNot(BeNil())
+		})
+		It(`DeleteZoneAssignment request example`, func() {
+			// begin-delete_zone_assignment
+
+			deleteZoneAssignmentOptions := contextBasedRestrictionsService.NewDeleteZoneAssignmentOptions(
+				zoneAssignmentID,
+			)
+
+			response, err := contextBasedRestrictionsService.DeleteZoneAssignment(deleteZoneAssignmentOptions)
+			if err != nil {
+				panic(err)
+			}
+			if response.StatusCode != 204 {
+				fmt.Printf("\nUnexpected response status code received from DeleteZoneAssignment(): %d\n", response.StatusCode)
+			}
+
+			// end-delete_zone_assignment
+			fmt.Printf("\nDeleteZoneAssignment() response status code: %d\n", response.StatusCode)
+
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(204))
+		})
 		It(`DeleteRule request example`, func() {
 			// begin-delete_rule
 
