@@ -55,10 +55,13 @@ var _ = Describe(`ContextBasedRestrictionsV1 Integration Tests`, func() {
 		config                          map[string]string
 		testAccountID                   string
 		testServiceName                 string
+		testTargetAccountID             string
 		zoneID                          string
 		zoneRev                         string
 		ruleID                          string
 		ruleRev                         string
+		zoneAssignmentID                string
+		zoneAssignmentRev               string
 	)
 
 	var shouldSkipTest = func() {
@@ -95,6 +98,11 @@ var _ = Describe(`ContextBasedRestrictionsV1 Integration Tests`, func() {
 			testServiceName = config["TEST_SERVICE_NAME"]
 			if testServiceName == "" {
 				Skip("Unable to load TEST_SERVICE_NAME configuration property, skipping tests")
+			}
+
+			testTargetAccountID = config["TEST_TARGET_ACCOUNT_ID"]
+			if testTargetAccountID == "" {
+				Skip("Unable to load TEST_TARGET_ACCOUNT_ID configuration property, skipping tests")
 			}
 
 			fmt.Printf("\nService URL: %s\n", serviceURL)
@@ -1204,6 +1212,251 @@ var _ = Describe(`ContextBasedRestrictionsV1 Integration Tests`, func() {
 			}
 
 			response, err := contextBasedRestrictionsService.DeleteRule(deleteRuleOptions)
+
+			Expect(err).To(Not(BeNil()))
+			Expect(response.StatusCode).To(Equal(404))
+		})
+	})
+
+	Describe(`CreateZoneAssignment - Create a zone assignment`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`CreateZoneAssignment(createZoneAssignmentOptions *CreateZoneAssignmentOptions)`, func() {
+			enterpriseTargetModel := &contextbasedrestrictionsv1.EnterpriseTarget{
+				Type: core.StringPtr(contextbasedrestrictionsv1.EnterpriseTargetTypeAccountConst),
+				ID:   core.StringPtr(testTargetAccountID),
+			}
+
+			zoneSpecModel := &contextbasedrestrictionsv1.ZoneAssignmentZoneSpec{
+				ID: core.StringPtr(zoneID),
+			}
+
+			createZoneAssignmentOptions := &contextbasedrestrictionsv1.CreateZoneAssignmentOptions{
+				AccountID:     core.StringPtr(testAccountID),
+				Target:        enterpriseTargetModel,
+				Zones:         []contextbasedrestrictionsv1.ZoneAssignmentZoneSpec{*zoneSpecModel},
+				TransactionID: getTransactionID(),
+			}
+
+			zoneAssignmentBulkOutput, response, err := contextBasedRestrictionsService.CreateZoneAssignment(createZoneAssignmentOptions)
+
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(201))
+			Expect(zoneAssignmentBulkOutput).ToNot(BeNil())
+			Expect(zoneAssignmentBulkOutput.Assignments).ToNot(BeEmpty())
+			zoneAssignmentID = *zoneAssignmentBulkOutput.Assignments[0].ID
+		})
+	})
+
+	Describe(`CreateZoneAssignment - Create a zone assignment with 'missing required AccountID parameter' error`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`CreateZoneAssignment(createZoneAssignmentOptions *CreateZoneAssignmentOptions) with 'missing AccountID' error`, func() {
+			createZoneAssignmentOptions := &contextbasedrestrictionsv1.CreateZoneAssignmentOptions{
+				TransactionID: getTransactionID(),
+			}
+
+			zoneAssignmentBulkOutput, response, err := contextBasedRestrictionsService.CreateZoneAssignment(createZoneAssignmentOptions)
+
+			Expect(err).To(Not(BeNil()))
+			Expect(response.StatusCode).To(Equal(400))
+			Expect(zoneAssignmentBulkOutput).To(BeNil())
+		})
+	})
+
+	Describe(`ListZoneAssignments - List zone assignments`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`ListZoneAssignments(listZoneAssignmentsOptions *ListZoneAssignmentsOptions)`, func() {
+			listZoneAssignmentsOptions := &contextbasedrestrictionsv1.ListZoneAssignmentsOptions{
+				AccountID:     core.StringPtr(testAccountID),
+				TransactionID: getTransactionID(),
+			}
+
+			zoneAssignmentList, response, err := contextBasedRestrictionsService.ListZoneAssignments(listZoneAssignmentsOptions)
+
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(200))
+			Expect(zoneAssignmentList).ToNot(BeNil())
+		})
+	})
+
+	Describe(`ListZoneAssignments - List zone assignments with 'missing AccountID parameter' error`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`ListZoneAssignments(listZoneAssignmentsOptions *ListZoneAssignmentsOptions) with 'missing AccountID parameter' error`, func() {
+			listZoneAssignmentsOptions := &contextbasedrestrictionsv1.ListZoneAssignmentsOptions{
+				TransactionID: getTransactionID(),
+			}
+
+			zoneAssignmentList, response, err := contextBasedRestrictionsService.ListZoneAssignments(listZoneAssignmentsOptions)
+
+			Expect(err).To(Not(BeNil()))
+			Expect(err.Error()).To(ContainSubstring("Field validation for 'AccountID' failed"))
+			Expect(response).To(BeNil())
+			Expect(zoneAssignmentList).To(BeNil())
+		})
+	})
+
+	Describe(`GetZoneAssignment - Get the specified zone assignment`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`GetZoneAssignment(getZoneAssignmentOptions *GetZoneAssignmentOptions)`, func() {
+			getZoneAssignmentOptions := &contextbasedrestrictionsv1.GetZoneAssignmentOptions{
+				ZoneAssignmentID: core.StringPtr(zoneAssignmentID),
+				TransactionID:    getTransactionID(),
+			}
+
+			zoneAssignment, response, err := contextBasedRestrictionsService.GetZoneAssignment(getZoneAssignmentOptions)
+
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(200))
+			Expect(zoneAssignment).ToNot(BeNil())
+			zoneAssignmentRev = response.Headers.Get("Etag")
+		})
+	})
+
+	Describe(`GetZoneAssignment - Get zone assignment with 'missing required ZoneAssignmentID parameter' error`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`GetZoneAssignment(getZoneAssignmentOptions *GetZoneAssignmentOptions) with 'missing required ZoneAssignmentID parameter' error`, func() {
+			getZoneAssignmentOptions := &contextbasedrestrictionsv1.GetZoneAssignmentOptions{
+				TransactionID: getTransactionID(),
+			}
+
+			zoneAssignment, response, err := contextBasedRestrictionsService.GetZoneAssignment(getZoneAssignmentOptions)
+
+			Expect(err).To(Not(BeNil()))
+			Expect(err.Error()).To(ContainSubstring("Field validation for 'ZoneAssignmentID' failed"))
+			Expect(response).To(BeNil())
+			Expect(zoneAssignment).To(BeNil())
+		})
+	})
+
+	Describe(`GetZoneAssignment - Get zone assignment with 'zone assignment not found' error`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`GetZoneAssignment(getZoneAssignmentOptions *GetZoneAssignmentOptions) with 'zone assignment not found' error (404)`, func() {
+			getZoneAssignmentOptions := &contextbasedrestrictionsv1.GetZoneAssignmentOptions{
+				ZoneAssignmentID: core.StringPtr(NonExistentID),
+				TransactionID:    getTransactionID(),
+			}
+
+			zoneAssignment, response, err := contextBasedRestrictionsService.GetZoneAssignment(getZoneAssignmentOptions)
+
+			Expect(err).To(Not(BeNil()))
+			Expect(response.StatusCode).To(Equal(404))
+			Expect(zoneAssignment).To(BeNil())
+		})
+	})
+
+	Describe(`PatchZoneAssignment - Update the specified zone assignment`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`PatchZoneAssignment(patchZoneAssignmentOptions *PatchZoneAssignmentOptions)`, func() {
+			patchZoneAssignmentOptions := &contextbasedrestrictionsv1.PatchZoneAssignmentOptions{
+				ZoneAssignmentID: core.StringPtr(zoneAssignmentID),
+				IfMatch:          core.StringPtr(zoneAssignmentRev),
+				TransactionID:    getTransactionID(),
+			}
+
+			zoneAssignment, response, err := contextBasedRestrictionsService.PatchZoneAssignment(patchZoneAssignmentOptions)
+
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(200))
+			Expect(zoneAssignment).ToNot(BeNil())
+		})
+	})
+
+	Describe(`PatchZoneAssignment - Update zone assignment with 'missing required ZoneAssignmentID parameter' error`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`PatchZoneAssignment(patchZoneAssignmentOptions *PatchZoneAssignmentOptions) with 'missing required ZoneAssignmentID parameter' error`, func() {
+			patchZoneAssignmentOptions := &contextbasedrestrictionsv1.PatchZoneAssignmentOptions{
+				IfMatch:       core.StringPtr("test"),
+				TransactionID: getTransactionID(),
+			}
+
+			zoneAssignment, response, err := contextBasedRestrictionsService.PatchZoneAssignment(patchZoneAssignmentOptions)
+
+			Expect(err).To(Not(BeNil()))
+			Expect(err.Error()).To(ContainSubstring("Field validation for 'ZoneAssignmentID' failed"))
+			Expect(response).To(BeNil())
+			Expect(zoneAssignment).To(BeNil())
+		})
+	})
+
+	Describe(`DeleteZoneAssignment - Delete the specified zone assignment`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`DeleteZoneAssignment(deleteZoneAssignmentOptions *DeleteZoneAssignmentOptions)`, func() {
+			deleteZoneAssignmentOptions := &contextbasedrestrictionsv1.DeleteZoneAssignmentOptions{
+				ZoneAssignmentID: core.StringPtr(zoneAssignmentID),
+				TransactionID:    getTransactionID(),
+			}
+
+			response, err := contextBasedRestrictionsService.DeleteZoneAssignment(deleteZoneAssignmentOptions)
+
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(BeElementOf(200, 204))
+
+			// The deletion is processed asynchronously, and a zone can't be deleted while an
+			// assignment still references it. Wait until the assignment is gone (404).
+			Eventually(func() int {
+				_, getResponse, getErr := contextBasedRestrictionsService.GetZoneAssignment(
+					&contextbasedrestrictionsv1.GetZoneAssignmentOptions{
+						ZoneAssignmentID: core.StringPtr(zoneAssignmentID),
+						TransactionID:    getTransactionID(),
+					})
+				if getErr == nil {
+					return 200
+				}
+				if getResponse != nil {
+					return getResponse.StatusCode
+				}
+				return 0
+			}, 60*time.Second, 2*time.Second).Should(Equal(404))
+		})
+	})
+
+	Describe(`DeleteZoneAssignment - Delete zone assignment with 'missing required ZoneAssignmentID parameter' error`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`DeleteZoneAssignment(deleteZoneAssignmentOptions *DeleteZoneAssignmentOptions) with 'missing required ZoneAssignmentID parameter' error`, func() {
+			deleteZoneAssignmentOptions := &contextbasedrestrictionsv1.DeleteZoneAssignmentOptions{
+				TransactionID: getTransactionID(),
+			}
+
+			response, err := contextBasedRestrictionsService.DeleteZoneAssignment(deleteZoneAssignmentOptions)
+
+			Expect(err).To(Not(BeNil()))
+			Expect(err.Error()).To(ContainSubstring("Field validation for 'ZoneAssignmentID' failed"))
+			Expect(response).To(BeNil())
+		})
+	})
+
+	Describe(`DeleteZoneAssignment - Delete zone assignment with 'zone assignment not found' error`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`DeleteZoneAssignment(deleteZoneAssignmentOptions *DeleteZoneAssignmentOptions) with 'zone assignment not found' error (404)`, func() {
+			deleteZoneAssignmentOptions := &contextbasedrestrictionsv1.DeleteZoneAssignmentOptions{
+				ZoneAssignmentID: core.StringPtr(NonExistentID),
+				TransactionID:    getTransactionID(),
+			}
+
+			response, err := contextBasedRestrictionsService.DeleteZoneAssignment(deleteZoneAssignmentOptions)
 
 			Expect(err).To(Not(BeNil()))
 			Expect(response.StatusCode).To(Equal(404))

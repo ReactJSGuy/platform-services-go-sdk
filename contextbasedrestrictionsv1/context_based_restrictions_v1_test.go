@@ -68,13 +68,14 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONTEXT_BASED_RESTRICTIONS_URL":       "https://contextbasedrestrictionsv1/api",
+				"CONTEXT_BASED_RESTRICTIONS_URL": "https://contextbasedrestrictionsv1/api",
 				"CONTEXT_BASED_RESTRICTIONS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1UsingExternalConfig(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{})
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1UsingExternalConfig(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+				})
 				Expect(contextBasedRestrictionsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -103,7 +104,8 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1UsingExternalConfig(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{})
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1UsingExternalConfig(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+				})
 				err := contextBasedRestrictionsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(contextBasedRestrictionsService).ToNot(BeNil())
@@ -121,12 +123,13 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONTEXT_BASED_RESTRICTIONS_URL":       "https://contextbasedrestrictionsv1/api",
+				"CONTEXT_BASED_RESTRICTIONS_URL": "https://contextbasedrestrictionsv1/api",
 				"CONTEXT_BASED_RESTRICTIONS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1UsingExternalConfig(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{})
+			contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1UsingExternalConfig(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+			})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(contextBasedRestrictionsService).To(BeNil())
@@ -137,7 +140,7 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONTEXT_BASED_RESTRICTIONS_AUTH_TYPE": "NOAuth",
+				"CONTEXT_BASED_RESTRICTIONS_AUTH_TYPE":   "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -488,6 +491,10 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 					Expect(req.URL.Query()["account_id"]).To(Equal([]string{"testString"}))
 					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(10))}))
+					Expect(req.URL.Query()["start"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["view"]).To(Equal([]string{"summary"}))
+					Expect(req.URL.Query()["sharing"]).To(Equal([]string{"local"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprint(res, `} this is not valid json {`)
@@ -508,6 +515,10 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				listZonesOptionsModel.TransactionID = core.StringPtr("testString")
 				listZonesOptionsModel.Name = core.StringPtr("testString")
 				listZonesOptionsModel.Sort = core.StringPtr("testString")
+				listZonesOptionsModel.Limit = core.Int64Ptr(int64(10))
+				listZonesOptionsModel.Start = core.StringPtr("testString")
+				listZonesOptionsModel.View = core.StringPtr("summary")
+				listZonesOptionsModel.Sharing = core.StringPtr("local")
 				listZonesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := contextBasedRestrictionsService.ListZones(listZonesOptionsModel)
@@ -545,13 +556,17 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 					Expect(req.URL.Query()["account_id"]).To(Equal([]string{"testString"}))
 					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(10))}))
+					Expect(req.URL.Query()["start"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["view"]).To(Equal([]string{"summary"}))
+					Expect(req.URL.Query()["sharing"]).To(Equal([]string{"local"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"count": 5, "zones": [{"id": "ID", "crn": "CRN", "name": "Name", "description": "Description", "addresses_preview": [{"type": "ipAddress", "value": "Value", "id": "ID"}], "address_count": 12, "excluded_count": 13, "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}]}`)
+					fmt.Fprintf(res, "%s", `{"count": 5, "zones": [{"id": "ID", "crn": "CRN", "name": "Name", "description": "Description", "addresses_preview": [{"type": "ipAddress", "value": "Value", "id": "ID"}], "address_count": 12, "excluded_count": 13, "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}], "limit": 5, "first": {"href": "Href"}, "next": {"href": "Href"}}`)
 				}))
 			})
 			It(`Invoke ListZones successfully with retries`, func() {
@@ -570,6 +585,10 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				listZonesOptionsModel.TransactionID = core.StringPtr("testString")
 				listZonesOptionsModel.Name = core.StringPtr("testString")
 				listZonesOptionsModel.Sort = core.StringPtr("testString")
+				listZonesOptionsModel.Limit = core.Int64Ptr(int64(10))
+				listZonesOptionsModel.Start = core.StringPtr("testString")
+				listZonesOptionsModel.View = core.StringPtr("summary")
+				listZonesOptionsModel.Sharing = core.StringPtr("local")
 				listZonesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -613,10 +632,14 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 					Expect(req.URL.Query()["account_id"]).To(Equal([]string{"testString"}))
 					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(10))}))
+					Expect(req.URL.Query()["start"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["view"]).To(Equal([]string{"summary"}))
+					Expect(req.URL.Query()["sharing"]).To(Equal([]string{"local"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"count": 5, "zones": [{"id": "ID", "crn": "CRN", "name": "Name", "description": "Description", "addresses_preview": [{"type": "ipAddress", "value": "Value", "id": "ID"}], "address_count": 12, "excluded_count": 13, "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}]}`)
+					fmt.Fprintf(res, "%s", `{"count": 5, "zones": [{"id": "ID", "crn": "CRN", "name": "Name", "description": "Description", "addresses_preview": [{"type": "ipAddress", "value": "Value", "id": "ID"}], "address_count": 12, "excluded_count": 13, "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}], "limit": 5, "first": {"href": "Href"}, "next": {"href": "Href"}}`)
 				}))
 			})
 			It(`Invoke ListZones successfully`, func() {
@@ -640,6 +663,10 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				listZonesOptionsModel.TransactionID = core.StringPtr("testString")
 				listZonesOptionsModel.Name = core.StringPtr("testString")
 				listZonesOptionsModel.Sort = core.StringPtr("testString")
+				listZonesOptionsModel.Limit = core.Int64Ptr(int64(10))
+				listZonesOptionsModel.Start = core.StringPtr("testString")
+				listZonesOptionsModel.View = core.StringPtr("summary")
+				listZonesOptionsModel.Sharing = core.StringPtr("local")
 				listZonesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -664,6 +691,10 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				listZonesOptionsModel.TransactionID = core.StringPtr("testString")
 				listZonesOptionsModel.Name = core.StringPtr("testString")
 				listZonesOptionsModel.Sort = core.StringPtr("testString")
+				listZonesOptionsModel.Limit = core.Int64Ptr(int64(10))
+				listZonesOptionsModel.Start = core.StringPtr("testString")
+				listZonesOptionsModel.View = core.StringPtr("summary")
+				listZonesOptionsModel.Sharing = core.StringPtr("local")
 				listZonesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := contextBasedRestrictionsService.SetServiceURL("")
@@ -709,6 +740,10 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				listZonesOptionsModel.TransactionID = core.StringPtr("testString")
 				listZonesOptionsModel.Name = core.StringPtr("testString")
 				listZonesOptionsModel.Sort = core.StringPtr("testString")
+				listZonesOptionsModel.Limit = core.Int64Ptr(int64(10))
+				listZonesOptionsModel.Start = core.StringPtr("testString")
+				listZonesOptionsModel.View = core.StringPtr("summary")
+				listZonesOptionsModel.Sharing = core.StringPtr("local")
 				listZonesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -721,6 +756,120 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 			})
 			AfterEach(func() {
 				testServer.Close()
+			})
+		})
+		Context(`Test pagination helper method on response`, func() {
+			It(`Invoke GetNextStart successfully`, func() {
+				responseObject := new(contextbasedrestrictionsv1.ZoneList)
+				nextObject := new(contextbasedrestrictionsv1.ZoneListNext)
+				nextObject.Href = core.StringPtr("ibm.com?start=abc-123")
+				responseObject.Next = nextObject
+
+				value, err := responseObject.GetNextStart()
+				Expect(err).To(BeNil())
+				Expect(value).To(Equal(core.StringPtr("abc-123")))
+			})
+			It(`Invoke GetNextStart without a "Next" property in the response`, func() {
+				responseObject := new(contextbasedrestrictionsv1.ZoneList)
+
+				value, err := responseObject.GetNextStart()
+				Expect(err).To(BeNil())
+				Expect(value).To(BeNil())
+			})
+			It(`Invoke GetNextStart without any query params in the "Next" URL`, func() {
+				responseObject := new(contextbasedrestrictionsv1.ZoneList)
+				nextObject := new(contextbasedrestrictionsv1.ZoneListNext)
+				nextObject.Href = core.StringPtr("ibm.com")
+				responseObject.Next = nextObject
+
+				value, err := responseObject.GetNextStart()
+				Expect(err).To(BeNil())
+				Expect(value).To(BeNil())
+			})
+		})
+		Context(`Using mock server endpoint - paginated response`, func() {
+			BeforeEach(func() {
+				requestNumber := 0
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listZonesPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					requestNumber++
+					switch requestNumber {
+					case 1:
+						fmt.Fprintf(res, "%s", `{"next":{"href":"https://myhost.com/somePath?start=1"},"total_count":2,"limit":1,"zones":[{"id":"ID","crn":"CRN","name":"Name","description":"Description","addresses_preview":[{"type":"ipAddress","value":"Value","id":"ID"}],"address_count":12,"excluded_count":13,"href":"Href","created_at":"2019-01-01T12:00:00.000Z","created_by_id":"CreatedByID","last_modified_at":"2019-01-01T12:00:00.000Z","last_modified_by_id":"LastModifiedByID"}]}`)
+					case 2:
+						fmt.Fprintf(res, "%s", `{"total_count":2,"limit":1,"zones":[{"id":"ID","crn":"CRN","name":"Name","description":"Description","addresses_preview":[{"type":"ipAddress","value":"Value","id":"ID"}],"address_count":12,"excluded_count":13,"href":"Href","created_at":"2019-01-01T12:00:00.000Z","created_by_id":"CreatedByID","last_modified_at":"2019-01-01T12:00:00.000Z","last_modified_by_id":"LastModifiedByID"}]}`)
+					default:
+						res.WriteHeader(400)
+					}
+				}))
+			})
+			It(`Use ZonesPager.GetNext successfully`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				listZonesOptionsModel := &contextbasedrestrictionsv1.ListZonesOptions{
+					AccountID: core.StringPtr("testString"),
+					XCorrelationID: core.StringPtr("testString"),
+					TransactionID: core.StringPtr("testString"),
+					Name: core.StringPtr("testString"),
+					Sort: core.StringPtr("testString"),
+					Limit: core.Int64Ptr(int64(10)),
+					View: core.StringPtr("summary"),
+					Sharing: core.StringPtr("local"),
+				}
+
+				pager, err := contextBasedRestrictionsService.NewZonesPager(listZonesOptionsModel)
+				Expect(err).To(BeNil())
+				Expect(pager).ToNot(BeNil())
+
+				var allResults []contextbasedrestrictionsv1.ZoneSummary
+				for pager.HasNext() {
+					nextPage, err := pager.GetNext()
+					Expect(err).To(BeNil())
+					Expect(nextPage).ToNot(BeNil())
+					allResults = append(allResults, nextPage...)
+				}
+				Expect(len(allResults)).To(Equal(2))
+			})
+			It(`Use ZonesPager.GetAll successfully`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				listZonesOptionsModel := &contextbasedrestrictionsv1.ListZonesOptions{
+					AccountID: core.StringPtr("testString"),
+					XCorrelationID: core.StringPtr("testString"),
+					TransactionID: core.StringPtr("testString"),
+					Name: core.StringPtr("testString"),
+					Sort: core.StringPtr("testString"),
+					Limit: core.Int64Ptr(int64(10)),
+					View: core.StringPtr("summary"),
+					Sharing: core.StringPtr("local"),
+				}
+
+				pager, err := contextBasedRestrictionsService.NewZonesPager(listZonesOptionsModel)
+				Expect(err).To(BeNil())
+				Expect(pager).ToNot(BeNil())
+
+				allResults, err := pager.GetAll()
+				Expect(err).To(BeNil())
+				Expect(allResults).ToNot(BeNil())
+				Expect(len(allResults)).To(Equal(2))
 			})
 		})
 	})
@@ -1886,6 +2035,8 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				// Construct an instance of the NewRuleOperationsAPITypesItem model
 				newRuleOperationsAPITypesItemModel := new(contextbasedrestrictionsv1.NewRuleOperationsAPITypesItem)
 				newRuleOperationsAPITypesItemModel.APITypeID = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.DisplayName = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.Description = core.StringPtr("testString")
 
 				// Construct an instance of the NewRuleOperations model
 				newRuleOperationsModel := new(contextbasedrestrictionsv1.NewRuleOperations)
@@ -1956,7 +2107,7 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"id": "ID", "crn": "CRN", "description": "Description", "contexts": [{"attributes": [{"name": "Name", "value": "Value"}]}], "resources": [{"attributes": [{"name": "Name", "value": "Value", "operator": "Operator"}], "tags": [{"name": "Name", "value": "Value", "operator": "Operator"}]}], "operations": {"api_types": [{"api_type_id": "APITypeID"}]}, "enforcement_mode": "enabled", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}`)
+					fmt.Fprintf(res, "%s", `{"id": "ID", "crn": "CRN", "description": "Description", "contexts": [{"attributes": [{"name": "Name", "value": "Value"}]}], "resources": [{"attributes": [{"name": "Name", "value": "Value", "operator": "Operator"}], "tags": [{"name": "Name", "value": "Value", "operator": "Operator"}]}], "operations": {"api_types": [{"api_type_id": "APITypeID", "display_name": "DisplayName", "description": "Description"}]}, "enforcement_mode": "enabled", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}`)
 				}))
 			})
 			It(`Invoke CreateRule successfully with retries`, func() {
@@ -1997,6 +2148,8 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				// Construct an instance of the NewRuleOperationsAPITypesItem model
 				newRuleOperationsAPITypesItemModel := new(contextbasedrestrictionsv1.NewRuleOperationsAPITypesItem)
 				newRuleOperationsAPITypesItemModel.APITypeID = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.DisplayName = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.Description = core.StringPtr("testString")
 
 				// Construct an instance of the NewRuleOperations model
 				newRuleOperationsModel := new(contextbasedrestrictionsv1.NewRuleOperations)
@@ -2070,7 +2223,7 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"id": "ID", "crn": "CRN", "description": "Description", "contexts": [{"attributes": [{"name": "Name", "value": "Value"}]}], "resources": [{"attributes": [{"name": "Name", "value": "Value", "operator": "Operator"}], "tags": [{"name": "Name", "value": "Value", "operator": "Operator"}]}], "operations": {"api_types": [{"api_type_id": "APITypeID"}]}, "enforcement_mode": "enabled", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}`)
+					fmt.Fprintf(res, "%s", `{"id": "ID", "crn": "CRN", "description": "Description", "contexts": [{"attributes": [{"name": "Name", "value": "Value"}]}], "resources": [{"attributes": [{"name": "Name", "value": "Value", "operator": "Operator"}], "tags": [{"name": "Name", "value": "Value", "operator": "Operator"}]}], "operations": {"api_types": [{"api_type_id": "APITypeID", "display_name": "DisplayName", "description": "Description"}]}, "enforcement_mode": "enabled", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}`)
 				}))
 			})
 			It(`Invoke CreateRule successfully`, func() {
@@ -2116,6 +2269,8 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				// Construct an instance of the NewRuleOperationsAPITypesItem model
 				newRuleOperationsAPITypesItemModel := new(contextbasedrestrictionsv1.NewRuleOperationsAPITypesItem)
 				newRuleOperationsAPITypesItemModel.APITypeID = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.DisplayName = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.Description = core.StringPtr("testString")
 
 				// Construct an instance of the NewRuleOperations model
 				newRuleOperationsModel := new(contextbasedrestrictionsv1.NewRuleOperations)
@@ -2176,6 +2331,8 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				// Construct an instance of the NewRuleOperationsAPITypesItem model
 				newRuleOperationsAPITypesItemModel := new(contextbasedrestrictionsv1.NewRuleOperationsAPITypesItem)
 				newRuleOperationsAPITypesItemModel.APITypeID = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.DisplayName = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.Description = core.StringPtr("testString")
 
 				// Construct an instance of the NewRuleOperations model
 				newRuleOperationsModel := new(contextbasedrestrictionsv1.NewRuleOperations)
@@ -2250,6 +2407,8 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				// Construct an instance of the NewRuleOperationsAPITypesItem model
 				newRuleOperationsAPITypesItemModel := new(contextbasedrestrictionsv1.NewRuleOperationsAPITypesItem)
 				newRuleOperationsAPITypesItemModel.APITypeID = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.DisplayName = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.Description = core.StringPtr("testString")
 
 				// Construct an instance of the NewRuleOperations model
 				newRuleOperationsModel := new(contextbasedrestrictionsv1.NewRuleOperations)
@@ -2383,7 +2542,7 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"count": 5, "rules": [{"id": "ID", "crn": "CRN", "description": "Description", "contexts": [{"attributes": [{"name": "Name", "value": "Value"}]}], "resources": [{"attributes": [{"name": "Name", "value": "Value", "operator": "Operator"}], "tags": [{"name": "Name", "value": "Value", "operator": "Operator"}]}], "operations": {"api_types": [{"api_type_id": "APITypeID"}]}, "enforcement_mode": "enabled", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}]}`)
+					fmt.Fprintf(res, "%s", `{"count": 5, "rules": [{"id": "ID", "crn": "CRN", "description": "Description", "contexts": [{"attributes": [{"name": "Name", "value": "Value"}]}], "resources": [{"attributes": [{"name": "Name", "value": "Value", "operator": "Operator"}], "tags": [{"name": "Name", "value": "Value", "operator": "Operator"}]}], "operations": {"api_types": [{"api_type_id": "APITypeID", "display_name": "DisplayName", "description": "Description"}]}, "enforcement_mode": "enabled", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}]}`)
 				}))
 			})
 			It(`Invoke ListRules successfully with retries`, func() {
@@ -2464,7 +2623,7 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"count": 5, "rules": [{"id": "ID", "crn": "CRN", "description": "Description", "contexts": [{"attributes": [{"name": "Name", "value": "Value"}]}], "resources": [{"attributes": [{"name": "Name", "value": "Value", "operator": "Operator"}], "tags": [{"name": "Name", "value": "Value", "operator": "Operator"}]}], "operations": {"api_types": [{"api_type_id": "APITypeID"}]}, "enforcement_mode": "enabled", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}]}`)
+					fmt.Fprintf(res, "%s", `{"count": 5, "rules": [{"id": "ID", "crn": "CRN", "description": "Description", "contexts": [{"attributes": [{"name": "Name", "value": "Value"}]}], "resources": [{"attributes": [{"name": "Name", "value": "Value", "operator": "Operator"}], "tags": [{"name": "Name", "value": "Value", "operator": "Operator"}]}], "operations": {"api_types": [{"api_type_id": "APITypeID", "display_name": "DisplayName", "description": "Description"}]}, "enforcement_mode": "enabled", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}]}`)
 				}))
 			})
 			It(`Invoke ListRules successfully`, func() {
@@ -2668,7 +2827,7 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"id": "ID", "crn": "CRN", "description": "Description", "contexts": [{"attributes": [{"name": "Name", "value": "Value"}]}], "resources": [{"attributes": [{"name": "Name", "value": "Value", "operator": "Operator"}], "tags": [{"name": "Name", "value": "Value", "operator": "Operator"}]}], "operations": {"api_types": [{"api_type_id": "APITypeID"}]}, "enforcement_mode": "enabled", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}`)
+					fmt.Fprintf(res, "%s", `{"id": "ID", "crn": "CRN", "description": "Description", "contexts": [{"attributes": [{"name": "Name", "value": "Value"}]}], "resources": [{"attributes": [{"name": "Name", "value": "Value", "operator": "Operator"}], "tags": [{"name": "Name", "value": "Value", "operator": "Operator"}]}], "operations": {"api_types": [{"api_type_id": "APITypeID", "display_name": "DisplayName", "description": "Description"}]}, "enforcement_mode": "enabled", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}`)
 				}))
 			})
 			It(`Invoke GetRule successfully with retries`, func() {
@@ -2728,7 +2887,7 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"id": "ID", "crn": "CRN", "description": "Description", "contexts": [{"attributes": [{"name": "Name", "value": "Value"}]}], "resources": [{"attributes": [{"name": "Name", "value": "Value", "operator": "Operator"}], "tags": [{"name": "Name", "value": "Value", "operator": "Operator"}]}], "operations": {"api_types": [{"api_type_id": "APITypeID"}]}, "enforcement_mode": "enabled", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}`)
+					fmt.Fprintf(res, "%s", `{"id": "ID", "crn": "CRN", "description": "Description", "contexts": [{"attributes": [{"name": "Name", "value": "Value"}]}], "resources": [{"attributes": [{"name": "Name", "value": "Value", "operator": "Operator"}], "tags": [{"name": "Name", "value": "Value", "operator": "Operator"}]}], "operations": {"api_types": [{"api_type_id": "APITypeID", "display_name": "DisplayName", "description": "Description"}]}, "enforcement_mode": "enabled", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}`)
 				}))
 			})
 			It(`Invoke GetRule successfully`, func() {
@@ -2888,6 +3047,8 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				// Construct an instance of the NewRuleOperationsAPITypesItem model
 				newRuleOperationsAPITypesItemModel := new(contextbasedrestrictionsv1.NewRuleOperationsAPITypesItem)
 				newRuleOperationsAPITypesItemModel.APITypeID = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.DisplayName = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.Description = core.StringPtr("testString")
 
 				// Construct an instance of the NewRuleOperations model
 				newRuleOperationsModel := new(contextbasedrestrictionsv1.NewRuleOperations)
@@ -2962,7 +3123,7 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"id": "ID", "crn": "CRN", "description": "Description", "contexts": [{"attributes": [{"name": "Name", "value": "Value"}]}], "resources": [{"attributes": [{"name": "Name", "value": "Value", "operator": "Operator"}], "tags": [{"name": "Name", "value": "Value", "operator": "Operator"}]}], "operations": {"api_types": [{"api_type_id": "APITypeID"}]}, "enforcement_mode": "enabled", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}`)
+					fmt.Fprintf(res, "%s", `{"id": "ID", "crn": "CRN", "description": "Description", "contexts": [{"attributes": [{"name": "Name", "value": "Value"}]}], "resources": [{"attributes": [{"name": "Name", "value": "Value", "operator": "Operator"}], "tags": [{"name": "Name", "value": "Value", "operator": "Operator"}]}], "operations": {"api_types": [{"api_type_id": "APITypeID", "display_name": "DisplayName", "description": "Description"}]}, "enforcement_mode": "enabled", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}`)
 				}))
 			})
 			It(`Invoke ReplaceRule successfully with retries`, func() {
@@ -3003,6 +3164,8 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				// Construct an instance of the NewRuleOperationsAPITypesItem model
 				newRuleOperationsAPITypesItemModel := new(contextbasedrestrictionsv1.NewRuleOperationsAPITypesItem)
 				newRuleOperationsAPITypesItemModel.APITypeID = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.DisplayName = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.Description = core.StringPtr("testString")
 
 				// Construct an instance of the NewRuleOperations model
 				newRuleOperationsModel := new(contextbasedrestrictionsv1.NewRuleOperations)
@@ -3080,7 +3243,7 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"id": "ID", "crn": "CRN", "description": "Description", "contexts": [{"attributes": [{"name": "Name", "value": "Value"}]}], "resources": [{"attributes": [{"name": "Name", "value": "Value", "operator": "Operator"}], "tags": [{"name": "Name", "value": "Value", "operator": "Operator"}]}], "operations": {"api_types": [{"api_type_id": "APITypeID"}]}, "enforcement_mode": "enabled", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}`)
+					fmt.Fprintf(res, "%s", `{"id": "ID", "crn": "CRN", "description": "Description", "contexts": [{"attributes": [{"name": "Name", "value": "Value"}]}], "resources": [{"attributes": [{"name": "Name", "value": "Value", "operator": "Operator"}], "tags": [{"name": "Name", "value": "Value", "operator": "Operator"}]}], "operations": {"api_types": [{"api_type_id": "APITypeID", "display_name": "DisplayName", "description": "Description"}]}, "enforcement_mode": "enabled", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}`)
 				}))
 			})
 			It(`Invoke ReplaceRule successfully`, func() {
@@ -3126,6 +3289,8 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				// Construct an instance of the NewRuleOperationsAPITypesItem model
 				newRuleOperationsAPITypesItemModel := new(contextbasedrestrictionsv1.NewRuleOperationsAPITypesItem)
 				newRuleOperationsAPITypesItemModel.APITypeID = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.DisplayName = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.Description = core.StringPtr("testString")
 
 				// Construct an instance of the NewRuleOperations model
 				newRuleOperationsModel := new(contextbasedrestrictionsv1.NewRuleOperations)
@@ -3188,6 +3353,8 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				// Construct an instance of the NewRuleOperationsAPITypesItem model
 				newRuleOperationsAPITypesItemModel := new(contextbasedrestrictionsv1.NewRuleOperationsAPITypesItem)
 				newRuleOperationsAPITypesItemModel.APITypeID = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.DisplayName = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.Description = core.StringPtr("testString")
 
 				// Construct an instance of the NewRuleOperations model
 				newRuleOperationsModel := new(contextbasedrestrictionsv1.NewRuleOperations)
@@ -3271,6 +3438,8 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				// Construct an instance of the NewRuleOperationsAPITypesItem model
 				newRuleOperationsAPITypesItemModel := new(contextbasedrestrictionsv1.NewRuleOperationsAPITypesItem)
 				newRuleOperationsAPITypesItemModel.APITypeID = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.DisplayName = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.Description = core.StringPtr("testString")
 
 				// Construct an instance of the NewRuleOperations model
 				newRuleOperationsModel := new(contextbasedrestrictionsv1.NewRuleOperations)
@@ -3612,6 +3781,1163 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 			})
 		})
 	})
+	Describe(`CreateZoneAssignment(createZoneAssignmentOptions *CreateZoneAssignmentOptions) - Operation response error`, func() {
+		createZoneAssignmentPath := "/v1/zone_assignments"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createZoneAssignmentPath))
+					Expect(req.Method).To(Equal("POST"))
+					Expect(req.Header["X-Correlation-Id"]).ToNot(BeNil())
+					Expect(req.Header["X-Correlation-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.Header["Transaction-Id"]).ToNot(BeNil())
+					Expect(req.Header["Transaction-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprint(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke CreateZoneAssignment with error: Operation response processing error`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Construct an instance of the EnterpriseTarget model
+				enterpriseTargetModel := new(contextbasedrestrictionsv1.EnterpriseTarget)
+				enterpriseTargetModel.Type = core.StringPtr("Account")
+				enterpriseTargetModel.ID = core.StringPtr("9ab34cd56ef78ab90cd12ef34ab56cde")
+
+				// Construct an instance of the ZoneAssignmentZoneSpec model
+				zoneAssignmentZoneSpecModel := new(contextbasedrestrictionsv1.ZoneAssignmentZoneSpec)
+				zoneAssignmentZoneSpecModel.ID = core.StringPtr("65810ac762004f22ac19f8f8edf70a34")
+
+				// Construct an instance of the CreateZoneAssignmentOptions model
+				createZoneAssignmentOptionsModel := new(contextbasedrestrictionsv1.CreateZoneAssignmentOptions)
+				createZoneAssignmentOptionsModel.AccountID = core.StringPtr("12ab34cd56ef78ab90cd12ef34ab56cd")
+				createZoneAssignmentOptionsModel.Target = enterpriseTargetModel
+				createZoneAssignmentOptionsModel.Zones = []contextbasedrestrictionsv1.ZoneAssignmentZoneSpec{*zoneAssignmentZoneSpecModel}
+				createZoneAssignmentOptionsModel.XCorrelationID = core.StringPtr("testString")
+				createZoneAssignmentOptionsModel.TransactionID = core.StringPtr("testString")
+				createZoneAssignmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := contextBasedRestrictionsService.CreateZoneAssignment(createZoneAssignmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				contextBasedRestrictionsService.EnableRetries(0, 0)
+				result, response, operationErr = contextBasedRestrictionsService.CreateZoneAssignment(createZoneAssignmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`CreateZoneAssignment(createZoneAssignmentOptions *CreateZoneAssignmentOptions)`, func() {
+		createZoneAssignmentPath := "/v1/zone_assignments"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createZoneAssignmentPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.Header["X-Correlation-Id"]).ToNot(BeNil())
+					Expect(req.Header["X-Correlation-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.Header["Transaction-Id"]).ToNot(BeNil())
+					Expect(req.Header["Transaction-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"assignments": [{"id": "ID", "crn": "CRN", "account_id": "AccountID", "target": {"type": "Account", "id": "ID"}, "zone": {"id": "ID"}, "status": "accepted", "resources": [{"target": {"type": "Account", "id": "ID"}, "zone": {"resource_created": {"id": "ID"}, "error_message": {"errors": [{"code": "Code", "message": "Message", "more_info": "MoreInfo", "target": {"type": "field", "name": "Name", "value": "Value"}, "cause": "Cause"}], "trace": "Trace", "status_code": 10}}}], "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}]}`)
+				}))
+			})
+			It(`Invoke CreateZoneAssignment successfully with retries`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+				contextBasedRestrictionsService.EnableRetries(0, 0)
+
+				// Construct an instance of the EnterpriseTarget model
+				enterpriseTargetModel := new(contextbasedrestrictionsv1.EnterpriseTarget)
+				enterpriseTargetModel.Type = core.StringPtr("Account")
+				enterpriseTargetModel.ID = core.StringPtr("9ab34cd56ef78ab90cd12ef34ab56cde")
+
+				// Construct an instance of the ZoneAssignmentZoneSpec model
+				zoneAssignmentZoneSpecModel := new(contextbasedrestrictionsv1.ZoneAssignmentZoneSpec)
+				zoneAssignmentZoneSpecModel.ID = core.StringPtr("65810ac762004f22ac19f8f8edf70a34")
+
+				// Construct an instance of the CreateZoneAssignmentOptions model
+				createZoneAssignmentOptionsModel := new(contextbasedrestrictionsv1.CreateZoneAssignmentOptions)
+				createZoneAssignmentOptionsModel.AccountID = core.StringPtr("12ab34cd56ef78ab90cd12ef34ab56cd")
+				createZoneAssignmentOptionsModel.Target = enterpriseTargetModel
+				createZoneAssignmentOptionsModel.Zones = []contextbasedrestrictionsv1.ZoneAssignmentZoneSpec{*zoneAssignmentZoneSpecModel}
+				createZoneAssignmentOptionsModel.XCorrelationID = core.StringPtr("testString")
+				createZoneAssignmentOptionsModel.TransactionID = core.StringPtr("testString")
+				createZoneAssignmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := contextBasedRestrictionsService.CreateZoneAssignmentWithContext(ctx, createZoneAssignmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				contextBasedRestrictionsService.DisableRetries()
+				result, response, operationErr := contextBasedRestrictionsService.CreateZoneAssignment(createZoneAssignmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = contextBasedRestrictionsService.CreateZoneAssignmentWithContext(ctx, createZoneAssignmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createZoneAssignmentPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.Header["X-Correlation-Id"]).ToNot(BeNil())
+					Expect(req.Header["X-Correlation-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.Header["Transaction-Id"]).ToNot(BeNil())
+					Expect(req.Header["Transaction-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"assignments": [{"id": "ID", "crn": "CRN", "account_id": "AccountID", "target": {"type": "Account", "id": "ID"}, "zone": {"id": "ID"}, "status": "accepted", "resources": [{"target": {"type": "Account", "id": "ID"}, "zone": {"resource_created": {"id": "ID"}, "error_message": {"errors": [{"code": "Code", "message": "Message", "more_info": "MoreInfo", "target": {"type": "field", "name": "Name", "value": "Value"}, "cause": "Cause"}], "trace": "Trace", "status_code": 10}}}], "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}]}`)
+				}))
+			})
+			It(`Invoke CreateZoneAssignment successfully`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := contextBasedRestrictionsService.CreateZoneAssignment(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the EnterpriseTarget model
+				enterpriseTargetModel := new(contextbasedrestrictionsv1.EnterpriseTarget)
+				enterpriseTargetModel.Type = core.StringPtr("Account")
+				enterpriseTargetModel.ID = core.StringPtr("9ab34cd56ef78ab90cd12ef34ab56cde")
+
+				// Construct an instance of the ZoneAssignmentZoneSpec model
+				zoneAssignmentZoneSpecModel := new(contextbasedrestrictionsv1.ZoneAssignmentZoneSpec)
+				zoneAssignmentZoneSpecModel.ID = core.StringPtr("65810ac762004f22ac19f8f8edf70a34")
+
+				// Construct an instance of the CreateZoneAssignmentOptions model
+				createZoneAssignmentOptionsModel := new(contextbasedrestrictionsv1.CreateZoneAssignmentOptions)
+				createZoneAssignmentOptionsModel.AccountID = core.StringPtr("12ab34cd56ef78ab90cd12ef34ab56cd")
+				createZoneAssignmentOptionsModel.Target = enterpriseTargetModel
+				createZoneAssignmentOptionsModel.Zones = []contextbasedrestrictionsv1.ZoneAssignmentZoneSpec{*zoneAssignmentZoneSpecModel}
+				createZoneAssignmentOptionsModel.XCorrelationID = core.StringPtr("testString")
+				createZoneAssignmentOptionsModel.TransactionID = core.StringPtr("testString")
+				createZoneAssignmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = contextBasedRestrictionsService.CreateZoneAssignment(createZoneAssignmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke CreateZoneAssignment with error: Operation request error`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Construct an instance of the EnterpriseTarget model
+				enterpriseTargetModel := new(contextbasedrestrictionsv1.EnterpriseTarget)
+				enterpriseTargetModel.Type = core.StringPtr("Account")
+				enterpriseTargetModel.ID = core.StringPtr("9ab34cd56ef78ab90cd12ef34ab56cde")
+
+				// Construct an instance of the ZoneAssignmentZoneSpec model
+				zoneAssignmentZoneSpecModel := new(contextbasedrestrictionsv1.ZoneAssignmentZoneSpec)
+				zoneAssignmentZoneSpecModel.ID = core.StringPtr("65810ac762004f22ac19f8f8edf70a34")
+
+				// Construct an instance of the CreateZoneAssignmentOptions model
+				createZoneAssignmentOptionsModel := new(contextbasedrestrictionsv1.CreateZoneAssignmentOptions)
+				createZoneAssignmentOptionsModel.AccountID = core.StringPtr("12ab34cd56ef78ab90cd12ef34ab56cd")
+				createZoneAssignmentOptionsModel.Target = enterpriseTargetModel
+				createZoneAssignmentOptionsModel.Zones = []contextbasedrestrictionsv1.ZoneAssignmentZoneSpec{*zoneAssignmentZoneSpecModel}
+				createZoneAssignmentOptionsModel.XCorrelationID = core.StringPtr("testString")
+				createZoneAssignmentOptionsModel.TransactionID = core.StringPtr("testString")
+				createZoneAssignmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := contextBasedRestrictionsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := contextBasedRestrictionsService.CreateZoneAssignment(createZoneAssignmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateZoneAssignment successfully`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Construct an instance of the EnterpriseTarget model
+				enterpriseTargetModel := new(contextbasedrestrictionsv1.EnterpriseTarget)
+				enterpriseTargetModel.Type = core.StringPtr("Account")
+				enterpriseTargetModel.ID = core.StringPtr("9ab34cd56ef78ab90cd12ef34ab56cde")
+
+				// Construct an instance of the ZoneAssignmentZoneSpec model
+				zoneAssignmentZoneSpecModel := new(contextbasedrestrictionsv1.ZoneAssignmentZoneSpec)
+				zoneAssignmentZoneSpecModel.ID = core.StringPtr("65810ac762004f22ac19f8f8edf70a34")
+
+				// Construct an instance of the CreateZoneAssignmentOptions model
+				createZoneAssignmentOptionsModel := new(contextbasedrestrictionsv1.CreateZoneAssignmentOptions)
+				createZoneAssignmentOptionsModel.AccountID = core.StringPtr("12ab34cd56ef78ab90cd12ef34ab56cd")
+				createZoneAssignmentOptionsModel.Target = enterpriseTargetModel
+				createZoneAssignmentOptionsModel.Zones = []contextbasedrestrictionsv1.ZoneAssignmentZoneSpec{*zoneAssignmentZoneSpecModel}
+				createZoneAssignmentOptionsModel.XCorrelationID = core.StringPtr("testString")
+				createZoneAssignmentOptionsModel.TransactionID = core.StringPtr("testString")
+				createZoneAssignmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := contextBasedRestrictionsService.CreateZoneAssignment(createZoneAssignmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`ListZoneAssignments(listZoneAssignmentsOptions *ListZoneAssignmentsOptions) - Operation response error`, func() {
+		listZoneAssignmentsPath := "/v1/zone_assignments"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listZoneAssignmentsPath))
+					Expect(req.Method).To(Equal("GET"))
+					Expect(req.Header["X-Correlation-Id"]).ToNot(BeNil())
+					Expect(req.Header["X-Correlation-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.Header["Transaction-Id"]).ToNot(BeNil())
+					Expect(req.Header["Transaction-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.URL.Query()["account_id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["zone_id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["target_type"]).To(Equal([]string{"Account"}))
+					Expect(req.URL.Query()["target_id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["status"]).To(Equal([]string{"accepted"}))
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprint(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke ListZoneAssignments with error: Operation response processing error`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Construct an instance of the ListZoneAssignmentsOptions model
+				listZoneAssignmentsOptionsModel := new(contextbasedrestrictionsv1.ListZoneAssignmentsOptions)
+				listZoneAssignmentsOptionsModel.AccountID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.XCorrelationID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.TransactionID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.ZoneID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.TargetType = core.StringPtr("Account")
+				listZoneAssignmentsOptionsModel.TargetID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.Status = core.StringPtr("accepted")
+				listZoneAssignmentsOptionsModel.Sort = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := contextBasedRestrictionsService.ListZoneAssignments(listZoneAssignmentsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				contextBasedRestrictionsService.EnableRetries(0, 0)
+				result, response, operationErr = contextBasedRestrictionsService.ListZoneAssignments(listZoneAssignmentsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`ListZoneAssignments(listZoneAssignmentsOptions *ListZoneAssignmentsOptions)`, func() {
+		listZoneAssignmentsPath := "/v1/zone_assignments"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listZoneAssignmentsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.Header["X-Correlation-Id"]).ToNot(BeNil())
+					Expect(req.Header["X-Correlation-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.Header["Transaction-Id"]).ToNot(BeNil())
+					Expect(req.Header["Transaction-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.URL.Query()["account_id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["zone_id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["target_type"]).To(Equal([]string{"Account"}))
+					Expect(req.URL.Query()["target_id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["status"]).To(Equal([]string{"accepted"}))
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"count": 5, "assignments": [{"id": "ID", "crn": "CRN", "account_id": "AccountID", "target": {"type": "Account", "id": "ID"}, "zone": {"id": "ID"}, "status": "accepted", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}]}`)
+				}))
+			})
+			It(`Invoke ListZoneAssignments successfully with retries`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+				contextBasedRestrictionsService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListZoneAssignmentsOptions model
+				listZoneAssignmentsOptionsModel := new(contextbasedrestrictionsv1.ListZoneAssignmentsOptions)
+				listZoneAssignmentsOptionsModel.AccountID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.XCorrelationID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.TransactionID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.ZoneID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.TargetType = core.StringPtr("Account")
+				listZoneAssignmentsOptionsModel.TargetID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.Status = core.StringPtr("accepted")
+				listZoneAssignmentsOptionsModel.Sort = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := contextBasedRestrictionsService.ListZoneAssignmentsWithContext(ctx, listZoneAssignmentsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				contextBasedRestrictionsService.DisableRetries()
+				result, response, operationErr := contextBasedRestrictionsService.ListZoneAssignments(listZoneAssignmentsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = contextBasedRestrictionsService.ListZoneAssignmentsWithContext(ctx, listZoneAssignmentsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listZoneAssignmentsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.Header["X-Correlation-Id"]).ToNot(BeNil())
+					Expect(req.Header["X-Correlation-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.Header["Transaction-Id"]).ToNot(BeNil())
+					Expect(req.Header["Transaction-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.URL.Query()["account_id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["zone_id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["target_type"]).To(Equal([]string{"Account"}))
+					Expect(req.URL.Query()["target_id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["status"]).To(Equal([]string{"accepted"}))
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"count": 5, "assignments": [{"id": "ID", "crn": "CRN", "account_id": "AccountID", "target": {"type": "Account", "id": "ID"}, "zone": {"id": "ID"}, "status": "accepted", "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}]}`)
+				}))
+			})
+			It(`Invoke ListZoneAssignments successfully`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := contextBasedRestrictionsService.ListZoneAssignments(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the ListZoneAssignmentsOptions model
+				listZoneAssignmentsOptionsModel := new(contextbasedrestrictionsv1.ListZoneAssignmentsOptions)
+				listZoneAssignmentsOptionsModel.AccountID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.XCorrelationID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.TransactionID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.ZoneID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.TargetType = core.StringPtr("Account")
+				listZoneAssignmentsOptionsModel.TargetID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.Status = core.StringPtr("accepted")
+				listZoneAssignmentsOptionsModel.Sort = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = contextBasedRestrictionsService.ListZoneAssignments(listZoneAssignmentsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke ListZoneAssignments with error: Operation validation and request error`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Construct an instance of the ListZoneAssignmentsOptions model
+				listZoneAssignmentsOptionsModel := new(contextbasedrestrictionsv1.ListZoneAssignmentsOptions)
+				listZoneAssignmentsOptionsModel.AccountID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.XCorrelationID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.TransactionID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.ZoneID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.TargetType = core.StringPtr("Account")
+				listZoneAssignmentsOptionsModel.TargetID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.Status = core.StringPtr("accepted")
+				listZoneAssignmentsOptionsModel.Sort = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := contextBasedRestrictionsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := contextBasedRestrictionsService.ListZoneAssignments(listZoneAssignmentsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the ListZoneAssignmentsOptions model with no property values
+				listZoneAssignmentsOptionsModelNew := new(contextbasedrestrictionsv1.ListZoneAssignmentsOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = contextBasedRestrictionsService.ListZoneAssignments(listZoneAssignmentsOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListZoneAssignments successfully`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Construct an instance of the ListZoneAssignmentsOptions model
+				listZoneAssignmentsOptionsModel := new(contextbasedrestrictionsv1.ListZoneAssignmentsOptions)
+				listZoneAssignmentsOptionsModel.AccountID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.XCorrelationID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.TransactionID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.ZoneID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.TargetType = core.StringPtr("Account")
+				listZoneAssignmentsOptionsModel.TargetID = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.Status = core.StringPtr("accepted")
+				listZoneAssignmentsOptionsModel.Sort = core.StringPtr("testString")
+				listZoneAssignmentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := contextBasedRestrictionsService.ListZoneAssignments(listZoneAssignmentsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`GetZoneAssignment(getZoneAssignmentOptions *GetZoneAssignmentOptions) - Operation response error`, func() {
+		getZoneAssignmentPath := "/v1/zone_assignments/testString"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getZoneAssignmentPath))
+					Expect(req.Method).To(Equal("GET"))
+					Expect(req.Header["X-Correlation-Id"]).ToNot(BeNil())
+					Expect(req.Header["X-Correlation-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.Header["Transaction-Id"]).ToNot(BeNil())
+					Expect(req.Header["Transaction-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprint(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke GetZoneAssignment with error: Operation response processing error`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Construct an instance of the GetZoneAssignmentOptions model
+				getZoneAssignmentOptionsModel := new(contextbasedrestrictionsv1.GetZoneAssignmentOptions)
+				getZoneAssignmentOptionsModel.ZoneAssignmentID = core.StringPtr("testString")
+				getZoneAssignmentOptionsModel.XCorrelationID = core.StringPtr("testString")
+				getZoneAssignmentOptionsModel.TransactionID = core.StringPtr("testString")
+				getZoneAssignmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := contextBasedRestrictionsService.GetZoneAssignment(getZoneAssignmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				contextBasedRestrictionsService.EnableRetries(0, 0)
+				result, response, operationErr = contextBasedRestrictionsService.GetZoneAssignment(getZoneAssignmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`GetZoneAssignment(getZoneAssignmentOptions *GetZoneAssignmentOptions)`, func() {
+		getZoneAssignmentPath := "/v1/zone_assignments/testString"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getZoneAssignmentPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.Header["X-Correlation-Id"]).ToNot(BeNil())
+					Expect(req.Header["X-Correlation-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.Header["Transaction-Id"]).ToNot(BeNil())
+					Expect(req.Header["Transaction-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"id": "ID", "crn": "CRN", "account_id": "AccountID", "target": {"type": "Account", "id": "ID"}, "zone": {"id": "ID"}, "status": "accepted", "resources": [{"target": {"type": "Account", "id": "ID"}, "zone": {"resource_created": {"id": "ID"}, "error_message": {"errors": [{"code": "Code", "message": "Message", "more_info": "MoreInfo", "target": {"type": "field", "name": "Name", "value": "Value"}, "cause": "Cause"}], "trace": "Trace", "status_code": 10}}}], "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}`)
+				}))
+			})
+			It(`Invoke GetZoneAssignment successfully with retries`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+				contextBasedRestrictionsService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetZoneAssignmentOptions model
+				getZoneAssignmentOptionsModel := new(contextbasedrestrictionsv1.GetZoneAssignmentOptions)
+				getZoneAssignmentOptionsModel.ZoneAssignmentID = core.StringPtr("testString")
+				getZoneAssignmentOptionsModel.XCorrelationID = core.StringPtr("testString")
+				getZoneAssignmentOptionsModel.TransactionID = core.StringPtr("testString")
+				getZoneAssignmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := contextBasedRestrictionsService.GetZoneAssignmentWithContext(ctx, getZoneAssignmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				contextBasedRestrictionsService.DisableRetries()
+				result, response, operationErr := contextBasedRestrictionsService.GetZoneAssignment(getZoneAssignmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = contextBasedRestrictionsService.GetZoneAssignmentWithContext(ctx, getZoneAssignmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getZoneAssignmentPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.Header["X-Correlation-Id"]).ToNot(BeNil())
+					Expect(req.Header["X-Correlation-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.Header["Transaction-Id"]).ToNot(BeNil())
+					Expect(req.Header["Transaction-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"id": "ID", "crn": "CRN", "account_id": "AccountID", "target": {"type": "Account", "id": "ID"}, "zone": {"id": "ID"}, "status": "accepted", "resources": [{"target": {"type": "Account", "id": "ID"}, "zone": {"resource_created": {"id": "ID"}, "error_message": {"errors": [{"code": "Code", "message": "Message", "more_info": "MoreInfo", "target": {"type": "field", "name": "Name", "value": "Value"}, "cause": "Cause"}], "trace": "Trace", "status_code": 10}}}], "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}`)
+				}))
+			})
+			It(`Invoke GetZoneAssignment successfully`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := contextBasedRestrictionsService.GetZoneAssignment(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the GetZoneAssignmentOptions model
+				getZoneAssignmentOptionsModel := new(contextbasedrestrictionsv1.GetZoneAssignmentOptions)
+				getZoneAssignmentOptionsModel.ZoneAssignmentID = core.StringPtr("testString")
+				getZoneAssignmentOptionsModel.XCorrelationID = core.StringPtr("testString")
+				getZoneAssignmentOptionsModel.TransactionID = core.StringPtr("testString")
+				getZoneAssignmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = contextBasedRestrictionsService.GetZoneAssignment(getZoneAssignmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke GetZoneAssignment with error: Operation validation and request error`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Construct an instance of the GetZoneAssignmentOptions model
+				getZoneAssignmentOptionsModel := new(contextbasedrestrictionsv1.GetZoneAssignmentOptions)
+				getZoneAssignmentOptionsModel.ZoneAssignmentID = core.StringPtr("testString")
+				getZoneAssignmentOptionsModel.XCorrelationID = core.StringPtr("testString")
+				getZoneAssignmentOptionsModel.TransactionID = core.StringPtr("testString")
+				getZoneAssignmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := contextBasedRestrictionsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := contextBasedRestrictionsService.GetZoneAssignment(getZoneAssignmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the GetZoneAssignmentOptions model with no property values
+				getZoneAssignmentOptionsModelNew := new(contextbasedrestrictionsv1.GetZoneAssignmentOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = contextBasedRestrictionsService.GetZoneAssignment(getZoneAssignmentOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetZoneAssignment successfully`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Construct an instance of the GetZoneAssignmentOptions model
+				getZoneAssignmentOptionsModel := new(contextbasedrestrictionsv1.GetZoneAssignmentOptions)
+				getZoneAssignmentOptionsModel.ZoneAssignmentID = core.StringPtr("testString")
+				getZoneAssignmentOptionsModel.XCorrelationID = core.StringPtr("testString")
+				getZoneAssignmentOptionsModel.TransactionID = core.StringPtr("testString")
+				getZoneAssignmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := contextBasedRestrictionsService.GetZoneAssignment(getZoneAssignmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`PatchZoneAssignment(patchZoneAssignmentOptions *PatchZoneAssignmentOptions) - Operation response error`, func() {
+		patchZoneAssignmentPath := "/v1/zone_assignments/testString"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(patchZoneAssignmentPath))
+					Expect(req.Method).To(Equal("PATCH"))
+					Expect(req.Header["If-Match"]).ToNot(BeNil())
+					Expect(req.Header["If-Match"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.Header["X-Correlation-Id"]).ToNot(BeNil())
+					Expect(req.Header["X-Correlation-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.Header["Transaction-Id"]).ToNot(BeNil())
+					Expect(req.Header["Transaction-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					// TODO: Add check for force query parameter
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprint(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke PatchZoneAssignment with error: Operation response processing error`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Construct an instance of the PatchZoneAssignmentOptions model
+				patchZoneAssignmentOptionsModel := new(contextbasedrestrictionsv1.PatchZoneAssignmentOptions)
+				patchZoneAssignmentOptionsModel.ZoneAssignmentID = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.IfMatch = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.XCorrelationID = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.TransactionID = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.Force = core.BoolPtr(false)
+				patchZoneAssignmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := contextBasedRestrictionsService.PatchZoneAssignment(patchZoneAssignmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				contextBasedRestrictionsService.EnableRetries(0, 0)
+				result, response, operationErr = contextBasedRestrictionsService.PatchZoneAssignment(patchZoneAssignmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`PatchZoneAssignment(patchZoneAssignmentOptions *PatchZoneAssignmentOptions)`, func() {
+		patchZoneAssignmentPath := "/v1/zone_assignments/testString"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(patchZoneAssignmentPath))
+					Expect(req.Method).To(Equal("PATCH"))
+
+					Expect(req.Header["If-Match"]).ToNot(BeNil())
+					Expect(req.Header["If-Match"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.Header["X-Correlation-Id"]).ToNot(BeNil())
+					Expect(req.Header["X-Correlation-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.Header["Transaction-Id"]).ToNot(BeNil())
+					Expect(req.Header["Transaction-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					// TODO: Add check for force query parameter
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"id": "ID", "crn": "CRN", "account_id": "AccountID", "target": {"type": "Account", "id": "ID"}, "zone": {"id": "ID"}, "status": "accepted", "resources": [{"target": {"type": "Account", "id": "ID"}, "zone": {"resource_created": {"id": "ID"}, "error_message": {"errors": [{"code": "Code", "message": "Message", "more_info": "MoreInfo", "target": {"type": "field", "name": "Name", "value": "Value"}, "cause": "Cause"}], "trace": "Trace", "status_code": 10}}}], "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}`)
+				}))
+			})
+			It(`Invoke PatchZoneAssignment successfully with retries`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+				contextBasedRestrictionsService.EnableRetries(0, 0)
+
+				// Construct an instance of the PatchZoneAssignmentOptions model
+				patchZoneAssignmentOptionsModel := new(contextbasedrestrictionsv1.PatchZoneAssignmentOptions)
+				patchZoneAssignmentOptionsModel.ZoneAssignmentID = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.IfMatch = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.XCorrelationID = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.TransactionID = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.Force = core.BoolPtr(false)
+				patchZoneAssignmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := contextBasedRestrictionsService.PatchZoneAssignmentWithContext(ctx, patchZoneAssignmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				contextBasedRestrictionsService.DisableRetries()
+				result, response, operationErr := contextBasedRestrictionsService.PatchZoneAssignment(patchZoneAssignmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = contextBasedRestrictionsService.PatchZoneAssignmentWithContext(ctx, patchZoneAssignmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(patchZoneAssignmentPath))
+					Expect(req.Method).To(Equal("PATCH"))
+
+					Expect(req.Header["If-Match"]).ToNot(BeNil())
+					Expect(req.Header["If-Match"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.Header["X-Correlation-Id"]).ToNot(BeNil())
+					Expect(req.Header["X-Correlation-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.Header["Transaction-Id"]).ToNot(BeNil())
+					Expect(req.Header["Transaction-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					// TODO: Add check for force query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"id": "ID", "crn": "CRN", "account_id": "AccountID", "target": {"type": "Account", "id": "ID"}, "zone": {"id": "ID"}, "status": "accepted", "resources": [{"target": {"type": "Account", "id": "ID"}, "zone": {"resource_created": {"id": "ID"}, "error_message": {"errors": [{"code": "Code", "message": "Message", "more_info": "MoreInfo", "target": {"type": "field", "name": "Name", "value": "Value"}, "cause": "Cause"}], "trace": "Trace", "status_code": 10}}}], "href": "Href", "created_at": "2019-01-01T12:00:00.000Z", "created_by_id": "CreatedByID", "last_modified_at": "2019-01-01T12:00:00.000Z", "last_modified_by_id": "LastModifiedByID"}`)
+				}))
+			})
+			It(`Invoke PatchZoneAssignment successfully`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := contextBasedRestrictionsService.PatchZoneAssignment(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the PatchZoneAssignmentOptions model
+				patchZoneAssignmentOptionsModel := new(contextbasedrestrictionsv1.PatchZoneAssignmentOptions)
+				patchZoneAssignmentOptionsModel.ZoneAssignmentID = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.IfMatch = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.XCorrelationID = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.TransactionID = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.Force = core.BoolPtr(false)
+				patchZoneAssignmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = contextBasedRestrictionsService.PatchZoneAssignment(patchZoneAssignmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke PatchZoneAssignment with error: Operation validation and request error`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Construct an instance of the PatchZoneAssignmentOptions model
+				patchZoneAssignmentOptionsModel := new(contextbasedrestrictionsv1.PatchZoneAssignmentOptions)
+				patchZoneAssignmentOptionsModel.ZoneAssignmentID = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.IfMatch = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.XCorrelationID = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.TransactionID = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.Force = core.BoolPtr(false)
+				patchZoneAssignmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := contextBasedRestrictionsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := contextBasedRestrictionsService.PatchZoneAssignment(patchZoneAssignmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the PatchZoneAssignmentOptions model with no property values
+				patchZoneAssignmentOptionsModelNew := new(contextbasedrestrictionsv1.PatchZoneAssignmentOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = contextBasedRestrictionsService.PatchZoneAssignment(patchZoneAssignmentOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke PatchZoneAssignment successfully`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Construct an instance of the PatchZoneAssignmentOptions model
+				patchZoneAssignmentOptionsModel := new(contextbasedrestrictionsv1.PatchZoneAssignmentOptions)
+				patchZoneAssignmentOptionsModel.ZoneAssignmentID = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.IfMatch = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.XCorrelationID = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.TransactionID = core.StringPtr("testString")
+				patchZoneAssignmentOptionsModel.Force = core.BoolPtr(false)
+				patchZoneAssignmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := contextBasedRestrictionsService.PatchZoneAssignment(patchZoneAssignmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`DeleteZoneAssignment(deleteZoneAssignmentOptions *DeleteZoneAssignmentOptions)`, func() {
+		deleteZoneAssignmentPath := "/v1/zone_assignments/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(deleteZoneAssignmentPath))
+					Expect(req.Method).To(Equal("DELETE"))
+
+					Expect(req.Header["X-Correlation-Id"]).ToNot(BeNil())
+					Expect(req.Header["X-Correlation-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					Expect(req.Header["Transaction-Id"]).ToNot(BeNil())
+					Expect(req.Header["Transaction-Id"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
+					// TODO: Add check for force query parameter
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke DeleteZoneAssignment successfully`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				response, operationErr := contextBasedRestrictionsService.DeleteZoneAssignment(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+
+				// Construct an instance of the DeleteZoneAssignmentOptions model
+				deleteZoneAssignmentOptionsModel := new(contextbasedrestrictionsv1.DeleteZoneAssignmentOptions)
+				deleteZoneAssignmentOptionsModel.ZoneAssignmentID = core.StringPtr("testString")
+				deleteZoneAssignmentOptionsModel.XCorrelationID = core.StringPtr("testString")
+				deleteZoneAssignmentOptionsModel.TransactionID = core.StringPtr("testString")
+				deleteZoneAssignmentOptionsModel.Force = core.BoolPtr(false)
+				deleteZoneAssignmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				response, operationErr = contextBasedRestrictionsService.DeleteZoneAssignment(deleteZoneAssignmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+			})
+			It(`Invoke DeleteZoneAssignment with error: Operation validation and request error`, func() {
+				contextBasedRestrictionsService, serviceErr := contextbasedrestrictionsv1.NewContextBasedRestrictionsV1(&contextbasedrestrictionsv1.ContextBasedRestrictionsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(contextBasedRestrictionsService).ToNot(BeNil())
+
+				// Construct an instance of the DeleteZoneAssignmentOptions model
+				deleteZoneAssignmentOptionsModel := new(contextbasedrestrictionsv1.DeleteZoneAssignmentOptions)
+				deleteZoneAssignmentOptionsModel.ZoneAssignmentID = core.StringPtr("testString")
+				deleteZoneAssignmentOptionsModel.XCorrelationID = core.StringPtr("testString")
+				deleteZoneAssignmentOptionsModel.TransactionID = core.StringPtr("testString")
+				deleteZoneAssignmentOptionsModel.Force = core.BoolPtr(false)
+				deleteZoneAssignmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := contextBasedRestrictionsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				response, operationErr := contextBasedRestrictionsService.DeleteZoneAssignment(deleteZoneAssignmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				// Construct a second instance of the DeleteZoneAssignmentOptions model with no property values
+				deleteZoneAssignmentOptionsModelNew := new(contextbasedrestrictionsv1.DeleteZoneAssignmentOptions)
+				// Invoke operation with invalid model (negative test)
+				response, operationErr = contextBasedRestrictionsService.DeleteZoneAssignment(deleteZoneAssignmentOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`ListAvailableServiceOperations(listAvailableServiceOperationsOptions *ListAvailableServiceOperationsOptions) - Operation response error`, func() {
 		listAvailableServiceOperationsPath := "/v1/operations"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
@@ -3911,7 +5237,11 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				newRuleOperationsAPITypesItemModel := new(contextbasedrestrictionsv1.NewRuleOperationsAPITypesItem)
 				Expect(newRuleOperationsAPITypesItemModel).ToNot(BeNil())
 				newRuleOperationsAPITypesItemModel.APITypeID = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.DisplayName = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.Description = core.StringPtr("testString")
 				Expect(newRuleOperationsAPITypesItemModel.APITypeID).To(Equal(core.StringPtr("testString")))
+				Expect(newRuleOperationsAPITypesItemModel.DisplayName).To(Equal(core.StringPtr("testString")))
+				Expect(newRuleOperationsAPITypesItemModel.Description).To(Equal(core.StringPtr("testString")))
 
 				// Construct an instance of the NewRuleOperations model
 				newRuleOperationsModel := new(contextbasedrestrictionsv1.NewRuleOperations)
@@ -3938,6 +5268,37 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				Expect(createRuleOptionsModel.XCorrelationID).To(Equal(core.StringPtr("testString")))
 				Expect(createRuleOptionsModel.TransactionID).To(Equal(core.StringPtr("testString")))
 				Expect(createRuleOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewCreateZoneAssignmentOptions successfully`, func() {
+				// Construct an instance of the EnterpriseTarget model
+				enterpriseTargetModel := new(contextbasedrestrictionsv1.EnterpriseTarget)
+				Expect(enterpriseTargetModel).ToNot(BeNil())
+				enterpriseTargetModel.Type = core.StringPtr("Account")
+				enterpriseTargetModel.ID = core.StringPtr("9ab34cd56ef78ab90cd12ef34ab56cde")
+				Expect(enterpriseTargetModel.Type).To(Equal(core.StringPtr("Account")))
+				Expect(enterpriseTargetModel.ID).To(Equal(core.StringPtr("9ab34cd56ef78ab90cd12ef34ab56cde")))
+
+				// Construct an instance of the ZoneAssignmentZoneSpec model
+				zoneAssignmentZoneSpecModel := new(contextbasedrestrictionsv1.ZoneAssignmentZoneSpec)
+				Expect(zoneAssignmentZoneSpecModel).ToNot(BeNil())
+				zoneAssignmentZoneSpecModel.ID = core.StringPtr("65810ac762004f22ac19f8f8edf70a34")
+				Expect(zoneAssignmentZoneSpecModel.ID).To(Equal(core.StringPtr("65810ac762004f22ac19f8f8edf70a34")))
+
+				// Construct an instance of the CreateZoneAssignmentOptions model
+				createZoneAssignmentOptionsModel := contextBasedRestrictionsService.NewCreateZoneAssignmentOptions()
+				createZoneAssignmentOptionsModel.SetAccountID("12ab34cd56ef78ab90cd12ef34ab56cd")
+				createZoneAssignmentOptionsModel.SetTarget(enterpriseTargetModel)
+				createZoneAssignmentOptionsModel.SetZones([]contextbasedrestrictionsv1.ZoneAssignmentZoneSpec{*zoneAssignmentZoneSpecModel})
+				createZoneAssignmentOptionsModel.SetXCorrelationID("testString")
+				createZoneAssignmentOptionsModel.SetTransactionID("testString")
+				createZoneAssignmentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(createZoneAssignmentOptionsModel).ToNot(BeNil())
+				Expect(createZoneAssignmentOptionsModel.AccountID).To(Equal(core.StringPtr("12ab34cd56ef78ab90cd12ef34ab56cd")))
+				Expect(createZoneAssignmentOptionsModel.Target).To(Equal(enterpriseTargetModel))
+				Expect(createZoneAssignmentOptionsModel.Zones).To(Equal([]contextbasedrestrictionsv1.ZoneAssignmentZoneSpec{*zoneAssignmentZoneSpecModel}))
+				Expect(createZoneAssignmentOptionsModel.XCorrelationID).To(Equal(core.StringPtr("testString")))
+				Expect(createZoneAssignmentOptionsModel.TransactionID).To(Equal(core.StringPtr("testString")))
+				Expect(createZoneAssignmentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewCreateZoneOptions successfully`, func() {
 				// Construct an instance of the AddressIPAddress model
@@ -3984,6 +5345,22 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				Expect(deleteRuleOptionsModel.TransactionID).To(Equal(core.StringPtr("testString")))
 				Expect(deleteRuleOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
+			It(`Invoke NewDeleteZoneAssignmentOptions successfully`, func() {
+				// Construct an instance of the DeleteZoneAssignmentOptions model
+				zoneAssignmentID := "testString"
+				deleteZoneAssignmentOptionsModel := contextBasedRestrictionsService.NewDeleteZoneAssignmentOptions(zoneAssignmentID)
+				deleteZoneAssignmentOptionsModel.SetZoneAssignmentID("testString")
+				deleteZoneAssignmentOptionsModel.SetXCorrelationID("testString")
+				deleteZoneAssignmentOptionsModel.SetTransactionID("testString")
+				deleteZoneAssignmentOptionsModel.SetForce(false)
+				deleteZoneAssignmentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(deleteZoneAssignmentOptionsModel).ToNot(BeNil())
+				Expect(deleteZoneAssignmentOptionsModel.ZoneAssignmentID).To(Equal(core.StringPtr("testString")))
+				Expect(deleteZoneAssignmentOptionsModel.XCorrelationID).To(Equal(core.StringPtr("testString")))
+				Expect(deleteZoneAssignmentOptionsModel.TransactionID).To(Equal(core.StringPtr("testString")))
+				Expect(deleteZoneAssignmentOptionsModel.Force).To(Equal(core.BoolPtr(false)))
+				Expect(deleteZoneAssignmentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
 			It(`Invoke NewDeleteZoneOptions successfully`, func() {
 				// Construct an instance of the DeleteZoneOptions model
 				zoneID := "testString"
@@ -3997,6 +5374,13 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				Expect(deleteZoneOptionsModel.XCorrelationID).To(Equal(core.StringPtr("testString")))
 				Expect(deleteZoneOptionsModel.TransactionID).To(Equal(core.StringPtr("testString")))
 				Expect(deleteZoneOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewEnterpriseTarget successfully`, func() {
+				typeVar := "Account"
+				id := "testString"
+				_model, err := contextBasedRestrictionsService.NewEnterpriseTarget(typeVar, id)
+				Expect(_model).ToNot(BeNil())
+				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewGetAccountSettingsOptions successfully`, func() {
 				// Construct an instance of the GetAccountSettingsOptions model
@@ -4039,6 +5423,20 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				Expect(getServicerefTargetOptionsModel.XCorrelationID).To(Equal(core.StringPtr("testString")))
 				Expect(getServicerefTargetOptionsModel.TransactionID).To(Equal(core.StringPtr("testString")))
 				Expect(getServicerefTargetOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewGetZoneAssignmentOptions successfully`, func() {
+				// Construct an instance of the GetZoneAssignmentOptions model
+				zoneAssignmentID := "testString"
+				getZoneAssignmentOptionsModel := contextBasedRestrictionsService.NewGetZoneAssignmentOptions(zoneAssignmentID)
+				getZoneAssignmentOptionsModel.SetZoneAssignmentID("testString")
+				getZoneAssignmentOptionsModel.SetXCorrelationID("testString")
+				getZoneAssignmentOptionsModel.SetTransactionID("testString")
+				getZoneAssignmentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(getZoneAssignmentOptionsModel).ToNot(BeNil())
+				Expect(getZoneAssignmentOptionsModel.ZoneAssignmentID).To(Equal(core.StringPtr("testString")))
+				Expect(getZoneAssignmentOptionsModel.XCorrelationID).To(Equal(core.StringPtr("testString")))
+				Expect(getZoneAssignmentOptionsModel.TransactionID).To(Equal(core.StringPtr("testString")))
+				Expect(getZoneAssignmentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewGetZoneOptions successfully`, func() {
 				// Construct an instance of the GetZoneOptions model
@@ -4118,6 +5516,30 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				Expect(listRulesOptionsModel.EnforcementMode).To(Equal(core.StringPtr("enabled")))
 				Expect(listRulesOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
+			It(`Invoke NewListZoneAssignmentsOptions successfully`, func() {
+				// Construct an instance of the ListZoneAssignmentsOptions model
+				accountID := "testString"
+				listZoneAssignmentsOptionsModel := contextBasedRestrictionsService.NewListZoneAssignmentsOptions(accountID)
+				listZoneAssignmentsOptionsModel.SetAccountID("testString")
+				listZoneAssignmentsOptionsModel.SetXCorrelationID("testString")
+				listZoneAssignmentsOptionsModel.SetTransactionID("testString")
+				listZoneAssignmentsOptionsModel.SetZoneID("testString")
+				listZoneAssignmentsOptionsModel.SetTargetType("Account")
+				listZoneAssignmentsOptionsModel.SetTargetID("testString")
+				listZoneAssignmentsOptionsModel.SetStatus("accepted")
+				listZoneAssignmentsOptionsModel.SetSort("testString")
+				listZoneAssignmentsOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(listZoneAssignmentsOptionsModel).ToNot(BeNil())
+				Expect(listZoneAssignmentsOptionsModel.AccountID).To(Equal(core.StringPtr("testString")))
+				Expect(listZoneAssignmentsOptionsModel.XCorrelationID).To(Equal(core.StringPtr("testString")))
+				Expect(listZoneAssignmentsOptionsModel.TransactionID).To(Equal(core.StringPtr("testString")))
+				Expect(listZoneAssignmentsOptionsModel.ZoneID).To(Equal(core.StringPtr("testString")))
+				Expect(listZoneAssignmentsOptionsModel.TargetType).To(Equal(core.StringPtr("Account")))
+				Expect(listZoneAssignmentsOptionsModel.TargetID).To(Equal(core.StringPtr("testString")))
+				Expect(listZoneAssignmentsOptionsModel.Status).To(Equal(core.StringPtr("accepted")))
+				Expect(listZoneAssignmentsOptionsModel.Sort).To(Equal(core.StringPtr("testString")))
+				Expect(listZoneAssignmentsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
 			It(`Invoke NewListZonesOptions successfully`, func() {
 				// Construct an instance of the ListZonesOptions model
 				accountID := "testString"
@@ -4127,6 +5549,10 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				listZonesOptionsModel.SetTransactionID("testString")
 				listZonesOptionsModel.SetName("testString")
 				listZonesOptionsModel.SetSort("testString")
+				listZonesOptionsModel.SetLimit(int64(10))
+				listZonesOptionsModel.SetStart("testString")
+				listZonesOptionsModel.SetView("summary")
+				listZonesOptionsModel.SetSharing("local")
 				listZonesOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(listZonesOptionsModel).ToNot(BeNil())
 				Expect(listZonesOptionsModel.AccountID).To(Equal(core.StringPtr("testString")))
@@ -4134,6 +5560,10 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				Expect(listZonesOptionsModel.TransactionID).To(Equal(core.StringPtr("testString")))
 				Expect(listZonesOptionsModel.Name).To(Equal(core.StringPtr("testString")))
 				Expect(listZonesOptionsModel.Sort).To(Equal(core.StringPtr("testString")))
+				Expect(listZonesOptionsModel.Limit).To(Equal(core.Int64Ptr(int64(10))))
+				Expect(listZonesOptionsModel.Start).To(Equal(core.StringPtr("testString")))
+				Expect(listZonesOptionsModel.View).To(Equal(core.StringPtr("summary")))
+				Expect(listZonesOptionsModel.Sharing).To(Equal(core.StringPtr("local")))
 				Expect(listZonesOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewNewRuleOperations successfully`, func() {
@@ -4147,6 +5577,25 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				_model, err := contextBasedRestrictionsService.NewNewRuleOperationsAPITypesItem(apiTypeID)
 				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
+			})
+			It(`Invoke NewPatchZoneAssignmentOptions successfully`, func() {
+				// Construct an instance of the PatchZoneAssignmentOptions model
+				zoneAssignmentID := "testString"
+				ifMatch := "testString"
+				patchZoneAssignmentOptionsModel := contextBasedRestrictionsService.NewPatchZoneAssignmentOptions(zoneAssignmentID, ifMatch)
+				patchZoneAssignmentOptionsModel.SetZoneAssignmentID("testString")
+				patchZoneAssignmentOptionsModel.SetIfMatch("testString")
+				patchZoneAssignmentOptionsModel.SetXCorrelationID("testString")
+				patchZoneAssignmentOptionsModel.SetTransactionID("testString")
+				patchZoneAssignmentOptionsModel.SetForce(false)
+				patchZoneAssignmentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(patchZoneAssignmentOptionsModel).ToNot(BeNil())
+				Expect(patchZoneAssignmentOptionsModel.ZoneAssignmentID).To(Equal(core.StringPtr("testString")))
+				Expect(patchZoneAssignmentOptionsModel.IfMatch).To(Equal(core.StringPtr("testString")))
+				Expect(patchZoneAssignmentOptionsModel.XCorrelationID).To(Equal(core.StringPtr("testString")))
+				Expect(patchZoneAssignmentOptionsModel.TransactionID).To(Equal(core.StringPtr("testString")))
+				Expect(patchZoneAssignmentOptionsModel.Force).To(Equal(core.BoolPtr(false)))
+				Expect(patchZoneAssignmentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewReplaceRuleOptions successfully`, func() {
 				// Construct an instance of the RuleContextAttribute model
@@ -4195,7 +5644,11 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				newRuleOperationsAPITypesItemModel := new(contextbasedrestrictionsv1.NewRuleOperationsAPITypesItem)
 				Expect(newRuleOperationsAPITypesItemModel).ToNot(BeNil())
 				newRuleOperationsAPITypesItemModel.APITypeID = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.DisplayName = core.StringPtr("testString")
+				newRuleOperationsAPITypesItemModel.Description = core.StringPtr("testString")
 				Expect(newRuleOperationsAPITypesItemModel.APITypeID).To(Equal(core.StringPtr("testString")))
+				Expect(newRuleOperationsAPITypesItemModel.DisplayName).To(Equal(core.StringPtr("testString")))
+				Expect(newRuleOperationsAPITypesItemModel.Description).To(Equal(core.StringPtr("testString")))
 
 				// Construct an instance of the NewRuleOperations model
 				newRuleOperationsModel := new(contextbasedrestrictionsv1.NewRuleOperations)
@@ -4305,6 +5758,12 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
+			It(`Invoke NewZoneAssignmentZoneSpec successfully`, func() {
+				id := "testString"
+				_model, err := contextBasedRestrictionsService.NewZoneAssignmentZoneSpec(id)
+				Expect(_model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
 			It(`Invoke NewAddressIPAddress successfully`, func() {
 				typeVar := "ipAddress"
 				value := "testString"
@@ -4369,6 +5828,25 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 			Expect(err).To(BeNil())
 			Expect(result).ToNot(BeNil())
 		})
+		It(`Invoke UnmarshalEnterpriseTarget successfully`, func() {
+			// Construct an instance of the model.
+			model := new(contextbasedrestrictionsv1.EnterpriseTarget)
+			model.Type = core.StringPtr("Account")
+			model.ID = core.StringPtr("testString")
+
+			b, err := json.Marshal(model)
+			Expect(err).To(BeNil())
+
+			var raw map[string]json.RawMessage
+			err = json.Unmarshal(b, &raw)
+			Expect(err).To(BeNil())
+
+			var result *contextbasedrestrictionsv1.EnterpriseTarget
+			err = contextbasedrestrictionsv1.UnmarshalEnterpriseTarget(raw, &result)
+			Expect(err).To(BeNil())
+			Expect(result).ToNot(BeNil())
+			Expect(result).To(Equal(model))
+		})
 		It(`Invoke UnmarshalNewRuleOperations successfully`, func() {
 			// Construct an instance of the model.
 			model := new(contextbasedrestrictionsv1.NewRuleOperations)
@@ -4391,6 +5869,8 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 			// Construct an instance of the model.
 			model := new(contextbasedrestrictionsv1.NewRuleOperationsAPITypesItem)
 			model.APITypeID = core.StringPtr("testString")
+			model.DisplayName = core.StringPtr("testString")
+			model.Description = core.StringPtr("testString")
 
 			b, err := json.Marshal(model)
 			Expect(err).To(BeNil())
@@ -4519,6 +5999,24 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 
 			var result *contextbasedrestrictionsv1.ServiceRefValue
 			err = contextbasedrestrictionsv1.UnmarshalServiceRefValue(raw, &result)
+			Expect(err).To(BeNil())
+			Expect(result).ToNot(BeNil())
+			Expect(result).To(Equal(model))
+		})
+		It(`Invoke UnmarshalZoneAssignmentZoneSpec successfully`, func() {
+			// Construct an instance of the model.
+			model := new(contextbasedrestrictionsv1.ZoneAssignmentZoneSpec)
+			model.ID = core.StringPtr("testString")
+
+			b, err := json.Marshal(model)
+			Expect(err).To(BeNil())
+
+			var raw map[string]json.RawMessage
+			err = json.Unmarshal(b, &raw)
+			Expect(err).To(BeNil())
+
+			var result *contextbasedrestrictionsv1.ZoneAssignmentZoneSpec
+			err = contextbasedrestrictionsv1.UnmarshalZoneAssignmentZoneSpec(raw, &result)
 			Expect(err).To(BeNil())
 			Expect(result).ToNot(BeNil())
 			Expect(result).To(Equal(model))
