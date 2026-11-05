@@ -22,6 +22,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/IBM/platform-services-go-sdk/contextbasedrestrictionsv1"
@@ -629,7 +630,7 @@ var _ = Describe(`ContextBasedRestrictionsV1 Examples Tests`, func() {
 			if err != nil {
 				panic(err)
 			}
-			if response.StatusCode != 204 {
+			if response.StatusCode != 200 && response.StatusCode != 204 {
 				fmt.Printf("\nUnexpected response status code received from DeleteZoneAssignment(): %d\n", response.StatusCode)
 			}
 
@@ -637,7 +638,21 @@ var _ = Describe(`ContextBasedRestrictionsV1 Examples Tests`, func() {
 			fmt.Printf("\nDeleteZoneAssignment() response status code: %d\n", response.StatusCode)
 
 			Expect(err).To(BeNil())
-			Expect(response.StatusCode).To(Equal(204))
+			Expect(response.StatusCode).To(BeElementOf(200, 204))
+
+			// The deletion is processed asynchronously, and a zone can't be deleted while an
+			// assignment still references it. Wait until the assignment is gone (404).
+			Eventually(func() int {
+				_, getResponse, getErr := contextBasedRestrictionsService.GetZoneAssignment(
+					contextBasedRestrictionsService.NewGetZoneAssignmentOptions(zoneAssignmentID))
+				if getErr == nil {
+					return 200
+				}
+				if getResponse != nil {
+					return getResponse.StatusCode
+				}
+				return 0
+			}, 60*time.Second, 2*time.Second).Should(Equal(404))
 		})
 		It(`DeleteRule request example`, func() {
 			// begin-delete_rule
